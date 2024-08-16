@@ -126,7 +126,7 @@ with center_content:
     )
 
     st.write("""
-    This model predicts theh likelihood of requiring inotropic for more than 24 hours postoperatively, 
+    This model predicts the likelihood of requiring inotropic support for more than 24 hours postoperatively, 
     based on cardioplegia administration and operative times.
     """)
 
