@@ -54,15 +54,7 @@ accuracy = accuracy_score(y_test_final, y_pred)
 # Custom CSS
 st.markdown("""
     <style>
-    .stApp {
-        background-color: #c3ab68;
-    }
-    .main-content {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+
     .stButton > button {
         background-color: #c3ab68;
         color: #000000 !important;
