@@ -164,8 +164,8 @@ with center_content:
             st.markdown(f"<b>Probability of > 24 hours:</b> {prediction_proba[0][1]:.2f}", unsafe_allow_html=True)
             st.markdown(f"<b>Probability of ≤ 24 hours:</b> {prediction_proba[0][0]:.2f}", unsafe_allow_html=True)
 
-        st.subheader("Model Performance")
-        st.markdown(f"<b>Accuracy:</b> {accuracy:.2f}", unsafe_allow_html=True)
+            st.subheader("Model Performance")
+            st.markdown(f"<b>Accuracy:</b> {accuracy:.2f}", unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
