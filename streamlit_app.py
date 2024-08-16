@@ -137,10 +137,10 @@ with center_content:
         st.subheader("Input Features")
         with st.form(key='input_form'):
             st.markdown('<div class="input-container">', unsafe_allow_html=True)
-            total_cardioplegia_volume = st.number_input("Total Cardioplegia Volume (mL)", value=float(X_final['Cardioplegia Volume/Weight (mL/kg)'].mean() * dataframe['Weight (kg)'].mean()))
-            weight = st.number_input("Weight (kg)", value=float(dataframe['Weight (kg)'].mean()))
-            cpb_time = st.number_input("CPB Time (min)", value=float(dataframe['CPB Time (min)'].mean()))
-            xc_time = st.number_input("XC Time (min)", value=float(dataframe['XC Time (min)'].mean()))
+            total_cardioplegia_volume = st.number_input("Total Cardioplegia Volume (mL)", value=2653)
+            weight = st.number_input("Weight (kg)", value=78)
+            cpb_time = st.number_input("CPB Time (min)", value=148)
+            xc_time = st.number_input("XC Time (min)", value=75)
             st.markdown('</div>', unsafe_allow_html=True)
             submit_button = st.form_submit_button(label='Predict')
 
