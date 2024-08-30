@@ -24,8 +24,8 @@ def load_data():
 
 dataframe = load_data()
 
-# Define the feature set and target
-final_features = [
+# Define the new feature set and target
+new_features = [
     'Age',
     'Sex',
     'BMI',
@@ -36,24 +36,24 @@ final_features = [
     'Average Dosing Interval (min)',
 ]
 
-X_final = dataframe[final_features]
-y_final = dataframe['Inotrope > 24 hours']
+X_new = dataframe[new_features]
+y_new = dataframe['Inotrope > 24 hours']
 
-# Split the final dataset into training and testing sets
-X_train_final, X_test_final, y_train_final, y_test_final = train_test_split(X_final, y_final, test_size=0.2, random_state=42)
+# Split the dataset into training and testing sets
+X_train_new, X_test_new, y_train_new, y_test_new = train_test_split(X_new, y_new, test_size=0.2, random_state=42)
 
-# Train the model
+# Retrain the model with the new features
 @st.cache_resource
-def train_model():
+def train_new_model():
     forest_classifier = RandomForestClassifier(random_state=42)
-    forest_classifier.fit(X_train_final, y_train_final)
+    forest_classifier.fit(X_train_new, y_train_new)
     return forest_classifier
 
-forest_classifier = train_model()
+forest_classifier = train_new_model()
 
 # Predictions and evaluation
-y_pred = forest_classifier.predict(X_test_final)
-accuracy = accuracy_score(y_test_final, y_pred)
+y_pred_new = forest_classifier.predict(X_test_new)
+accuracy_new = accuracy_score(y_test_new, y_pred_new)
 
 # Custom CSS
 st.markdown("""
@@ -143,13 +143,13 @@ with center_content:
             st.markdown('<div class="input-container">', unsafe_allow_html=True)
             age = st.number_input("Age", min_value=0, max_value=120, value=50)
             sex = st.selectbox("Sex", options=[("Male", 1), ("Female", 0)], format_func=lambda x: x[0])
-            bmi = st.number_input("BMI", value=25.0)
-            total_cardioplegia_volume = st.number_input("Total Cardioplegia Volume (mL)", value=2653)
-            weight = st.number_input("Weight (kg)", value=78)
-            cpb_time = st.number_input("CPB Time (min)", value=148)
-            xc_time = st.number_input("XC Time (min)", value=75)
-            doses = st.number_input("Cardioplegia - # of Doses", min_value=1, value=3)
-            dosing_interval = st.number_input("Average Dosing Interval (min)", value=30)
+            bmi = st.number_input("BMI", value=21.5)
+            total_cardioplegia_volume = st.number_input("Total Cardioplegia Volume (mL)", value=1239)
+            weight = st.number_input("Weight (kg)", value=71)
+            cpb_time = st.number_input("CPB Time (min)", value=110)
+            xc_time = st.number_input("XC Time (min)", value=88)
+            doses = st.number_input("Cardioplegia - # of Doses", min_value=1, value=1)
+            dosing_interval = st.number_input("Average Dosing Interval (min)", value=0)
             st.markdown('</div>', unsafe_allow_html=True)
             submit_button = st.form_submit_button(label='Predict')
 
@@ -179,7 +179,7 @@ with center_content:
             st.markdown(f"<b>Probability of ≤ 24 hours:</b> {prediction_proba[0][0]:.2f}", unsafe_allow_html=True)
 
             st.subheader("Model Performance")
-            st.markdown(f"<b>Accuracy:</b> {accuracy:.2f}", unsafe_allow_html=True)
+            st.markdown(f"<b>Accuracy:</b> {accuracy_new:.2f}", unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
