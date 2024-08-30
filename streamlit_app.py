@@ -18,25 +18,29 @@ def get_image_base64(path):
 # Load the data
 @st.cache_data
 def load_data():
-    sheet_name = "Inotrope Project copy"
+    sheet_name = "final_streamlit_data"
     dataframe = pd.read_excel(f"{sheet_name}.xlsx")
-    dataframe['Cardioplegia Volume/Weight (mL/kg)'] = dataframe['Total Volume (mL)'] / dataframe['Weight (kg)']
-    dataframe['CPB/Clamp Time Ratio'] = dataframe['CPB Time (min)'] / dataframe['XC Time (min)']
-    dataframe['Inotrope > 24 hours'] = dataframe['Max Concurrent Inotrope Duration (hours)'] > 24
-    return dataframe[dataframe["# of Doses"] <= 3]
+    return dataframe
 
 dataframe = load_data()
 
 # Define the feature set and target
 final_features = [
+    'Age',
+    'Sex',
+    'BMI',
     'Cardioplegia Volume/Weight (mL/kg)',
-    'CPB/Clamp Time Ratio',
+    'Cardioplegia - Cardiopulmonary Bypass Time (min)',
+    'Cardioplegia - Cross Clamp Time (min)',
+    'Cardioplegia - # of Doses',
+    'Average Dosing Interval (min)',
 ]
+
 X_final = dataframe[final_features]
 y_final = dataframe['Inotrope > 24 hours']
 
 # Split the final dataset into training and testing sets
-X_train_final, X_test_final, y_train_final, y_test_final = train_test_split(X_final, y_final, test_size=0.3, random_state=42)
+X_train_final, X_test_final, y_train_final, y_test_final = train_test_split(X_final, y_final, test_size=0.2, random_state=42)
 
 # Train the model
 @st.cache_resource
@@ -137,10 +141,15 @@ with center_content:
         st.subheader("Input Features")
         with st.form(key='input_form'):
             st.markdown('<div class="input-container">', unsafe_allow_html=True)
+            age = st.number_input("Age", min_value=0, max_value=120, value=50)
+            sex = st.selectbox("Sex", options=[("Male", 1), ("Female", 0)], format_func=lambda x: x[0])
+            bmi = st.number_input("BMI", value=25.0)
             total_cardioplegia_volume = st.number_input("Total Cardioplegia Volume (mL)", value=2653)
             weight = st.number_input("Weight (kg)", value=78)
             cpb_time = st.number_input("CPB Time (min)", value=148)
             xc_time = st.number_input("XC Time (min)", value=75)
+            doses = st.number_input("Cardioplegia - # of Doses", min_value=1, value=3)
+            dosing_interval = st.number_input("Average Dosing Interval (min)", value=30)
             st.markdown('</div>', unsafe_allow_html=True)
             submit_button = st.form_submit_button(label='Predict')
 
@@ -149,11 +158,16 @@ with center_content:
         if submit_button:
             # Calculated fields
             volume_weight = total_cardioplegia_volume / weight
-            cpb_clamp_ratio = cpb_time / xc_time
 
             user_features = pd.DataFrame({
+                'Age': [age],
+                'Sex': [sex[1]],  # Use the numeric value for sex
+                'BMI': [bmi],
                 'Cardioplegia Volume/Weight (mL/kg)': [volume_weight],
-                'CPB/Clamp Time Ratio': [cpb_clamp_ratio]
+                'Cardioplegia - Cardiopulmonary Bypass Time (min)': [cpb_time],
+                'Cardioplegia - Cross Clamp Time (min)': [xc_time],
+                'Cardioplegia - # of Doses': [doses],
+                'Average Dosing Interval (min)': [dosing_interval]
             })
 
             # Prediction
